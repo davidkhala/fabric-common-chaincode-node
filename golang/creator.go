@@ -43,7 +43,7 @@ func ParseCreator(creator []byte) (*Creator, error) {
 
 	block, rest := pem.Decode(certificateBuffer.Bytes())
 
-	if rest != nil {
+	if rest != nil && len(rest) > 0 {
 		return nil, errors.New("pem decode failed:" + string(rest))
 	}
 	certificate, err := x509.ParseCertificate(block.Bytes)
