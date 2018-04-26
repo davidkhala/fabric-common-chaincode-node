@@ -2,34 +2,45 @@ package golang
 
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/ledger/queryresult"
-	"encoding/json"
 )
 
-func WorldStates(stub shim.ChaincodeStubInterface) ([]queryresult.KV, error) {
-	keysIterator, err := stub.GetStateByRange("", "")
+func WorldStates(stub shim.ChaincodeStubInterface, objectType string) ([]KVJson, error) {
+	var keysIterator shim.StateQueryIteratorInterface
+	var err error;
+	if objectType == "" {
+		keysIterator, err = stub.GetStateByRange("", "")
+	} else {
+		keysIterator, err = stub.GetStateByPartialCompositeKey(objectType, nil)
+	}
+
 	if err != nil {
 		return nil, err
 	}
 	defer keysIterator.Close()
 
-	var kvs []queryresult.KV
+	var kvs []KVJson
 	for keysIterator.HasNext() {
 		kv, iterErr := keysIterator.Next()
 		if iterErr != nil {
 			return nil, iterErr
 		}
-		kvs = append(kvs, *kv)
+		if objectType == "" {
+			kvs = append(kvs, KVJson{Namespace: kv.Namespace, Key: kv.Key, Value: string(kv.Value)})
+		} else {
+			pKey, keys, err := stub.SplitCompositeKey(kv.Key)
+			if err != nil {
+				return nil, iterErr
+			}
+			keys = append([]string{pKey}, keys...)
+			kvs = append(kvs, KVJson{Namespace: kv.Namespace, CompositeKeys: keys, Value: string(kv.Value)})
+		}
 	}
 	return kvs, nil
 }
-func KV2Json(kv queryresult.KV) (string) {
-	type KVJson struct {
-		Namespace string
-		Key       string
-		Value     string
-	}
-	kvJson:= KVJson{Namespace:kv.Namespace,Key:kv.Key,Value:string(kv.Value)}
-	jsonString,_:=  json.Marshal(kvJson)
-	return string(jsonString)
+
+type KVJson struct {
+	Namespace     string
+	Key           string
+	CompositeKeys []string
+	Value         string
 }
