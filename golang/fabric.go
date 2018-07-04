@@ -44,3 +44,9 @@ type KVJson struct {
 	CompositeKeys []string
 	Value         string
 }
+
+func CreateCompositeKey(stub shim.ChaincodeStubInterface, first string, attrs []string) string {
+	var key, err = stub.CreateCompositeKey(first, attrs)
+	panicError(err);
+	return key
+}
