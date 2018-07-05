@@ -1,34 +1,24 @@
 package golang
 
-type Set struct {
-	set   map[interface{}]struct{}
-	empty struct{}
+type StringList struct {
+	Strings []string
 }
 
-func (s *Set) construct() {
-	if s.set == nil {
-		s.set = map[interface{}]struct{}{}
-		s.empty = struct{}{}
+func (s *StringList) construct() {
+	if s.Strings == nil {
+		s.Strings = []string{}
 	}
 }
-func (s *Set) Put(value interface{}) {
+func (s *StringList) Has(value string) bool {
 	s.construct();
-	s.set[value] = s.empty;
-}
-func (s *Set) List() []interface{} {
-	s.construct();
-	keys := make([]interface{}, 0, len(s.set))
-	for k := range s.set {
-		keys = append(keys, k)
-	}
-	return keys
-}
-func (s *Set) Has(value interface{}) bool {
-	s.construct();
-	for k := range s.set {
-		if k == value {
+	for _, e := range s.Strings {
+		if e == value {
 			return true
 		}
 	}
 	return false
+}
+func (s *StringList) Put(value string) {
+	s.construct();
+	s.Strings = append(s.Strings,value )
 }

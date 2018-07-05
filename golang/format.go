@@ -24,8 +24,11 @@ func PanicError(err error) {
 	}
 }
 
+/**
+	a wrapper to panic Unmarshal(non-pointer v)
+ */
 func FromJson(jsonString []byte, v interface{}) {
-	err := json.Unmarshal(jsonString, &v)
+	err := json.Unmarshal(jsonString, v)
 	PanicError(err);
 }
 
