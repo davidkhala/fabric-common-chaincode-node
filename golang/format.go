@@ -18,19 +18,19 @@ func ToInt(bytes []byte) int {
 func ToBytes(i int) []byte {
 	return []byte(strconv.Itoa(i))
 }
-func panicError(err error) {
+func PanicError(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
-func fromJson(jsonString []byte, v interface{}) {
+func FromJson(jsonString []byte, v interface{}) {
 	err := json.Unmarshal(jsonString, &v)
-	panicError(err);
+	PanicError(err);
 }
 
-func toJson(v interface{}) []byte {
+func ToJson(v interface{}) []byte {
 	result, err := json.Marshal(v)
-	panicError(err)
+	PanicError(err)
 	return result
 }

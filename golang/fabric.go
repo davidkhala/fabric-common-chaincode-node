@@ -47,6 +47,16 @@ type KVJson struct {
 
 func CreateCompositeKey(stub shim.ChaincodeStubInterface, first string, attrs []string) string {
 	var key, err = stub.CreateCompositeKey(first, attrs)
-	panicError(err);
+	PanicError(err);
 	return key
+}
+
+func GetState(stub shim.ChaincodeStubInterface, key string) []byte {
+	var bytes, err = stub.GetState(key)
+	PanicError(err);
+	return bytes
+}
+func PutState(stub shim.ChaincodeStubInterface, key string, value []byte) {
+	var err = stub.PutState(key, value)
+	PanicError(err);
 }
