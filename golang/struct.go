@@ -1,5 +1,7 @@
 package golang
 
+import "strings"
+
 type StringList struct {
 	Strings []string
 }
@@ -17,6 +19,9 @@ func (s *StringList) Has(value string) bool {
 		}
 	}
 	return false
+}
+func (s *StringList) String() string {
+	return strings.Join(s.Strings,",")
 }
 func (s *StringList) Put(value string) {
 	s.construct();
