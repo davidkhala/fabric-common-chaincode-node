@@ -64,8 +64,8 @@ func TestTestChaincode_Invoke(t *testing.T) {
 }
 
 func TestCreateCompositeKey(t *testing.T) {
-	var cKey1 = CreateCompositeKey(mock, "a", []string{"B", "C"})
-	var cKey2 = CreateCompositeKey(mock, "a", []string{"c", "D"})
+	var cKey1 = CreateCompositeKey(mock, "a", []string{"c", "C"})
+	var cKey2 = CreateCompositeKey(mock, "a", []string{"d", "D"})
 	var TxID = "composityKey"
 	mock.MockTransactionStart(TxID);
 	PutState(mock, cKey1, []byte("c"))
@@ -73,7 +73,7 @@ func TestCreateCompositeKey(t *testing.T) {
 	mock.MockTransactionEnd(TxID);
 	TxID = "composite1"
 	mock.MockTransactionStart(TxID)
-	iterator := GetStateByPartialCompositeKey(mock, "a", nil)
+	iterator := GetStateByPartialCompositeKey(mock, "a", []string{"d"})
 	kvs := StatesList(iterator)
 	fmt.Println(kvs)
 	mock.MockTransactionEnd(TxID)
@@ -85,14 +85,19 @@ mockstub.go line 410:	mockLogger.Error("HasNext() couldn't get Current")
  */
 func TestWorldStates(t *testing.T) {
 	var TxID = "composityKey"
-	mock.MockTransactionStart(TxID);
-	PutState(mock, "a", []byte("c"))
-	PutState(mock, "bv", []byte("C"))
-	PutState(mock, "c", []byte("C"))
+	mock.MockTransactionStart(TxID)
+
+	PutState(mock, "a_1", []byte("c"))
+	PutState(mock, "a_2", []byte("C"))
+	PutState(mock, "a_3", []byte("C"))
+
 	mock.MockTransactionEnd(TxID);
 	TxID = "composite1"
 	mock.MockTransactionStart(TxID)
 	kvs := WorldStates(mock, "")
+
+	fmt.Println(kvs)
+	kvs = StatesList(GetStateByRange(mock,"a_1",""))
 	fmt.Println(kvs)
 	mock.MockTransactionEnd(TxID)
 }

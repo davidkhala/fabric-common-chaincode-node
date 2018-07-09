@@ -64,21 +64,17 @@ type KeyModification struct {
 
 func HistoryToArray(iterator shim.HistoryQueryIteratorInterface) (result []KeyModification) {
 	defer iterator.Close()
-	for {
-		if iterator.HasNext() {
-			keyModification, err := iterator.Next()
-			PanicError(err)
-			var timeStamp = keyModification.Timestamp
-			var time = timeStamp.Seconds*1000 + int64(timeStamp.Nanos/1000000)
-			var translated = KeyModification{
-				keyModification.TxId,
-				string(keyModification.Value),
-				string(time),
-				keyModification.IsDelete}
-			result = append(result, translated)
-		} else {
-			break
-		}
+	for iterator.HasNext() {
+		keyModification, err := iterator.Next()
+		PanicError(err)
+		var timeStamp = keyModification.Timestamp
+		var time = timeStamp.Seconds*1000 + int64(timeStamp.Nanos/1000000)
+		var translated = KeyModification{
+			keyModification.TxId,
+			string(keyModification.Value),
+			string(time),
+			keyModification.IsDelete}
+		result = append(result, translated)
 	}
 	return result;
 }
