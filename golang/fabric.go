@@ -2,10 +2,11 @@ package golang
 
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/ledger/queryresult"
+	"github.com/hyperledger/fabric/protos/peer"
+	"errors"
 )
 
-func WorldStates(ccAPI shim.ChaincodeStubInterface, objectType string) ([]KVJson, error) {
+func WorldStates(ccAPI shim.ChaincodeStubInterface, objectType string) ([]KVJson) {
 	var keysIterator shim.StateQueryIteratorInterface
 	if objectType == "" {
 		keysIterator = GetStateByRange(ccAPI, "", "")
@@ -13,37 +14,33 @@ func WorldStates(ccAPI shim.ChaincodeStubInterface, objectType string) ([]KVJson
 		keysIterator = GetStateByPartialCompositeKey(ccAPI, objectType, nil)
 	}
 
-	defer keysIterator.Close()
-
+	var kvs = StatesList(keysIterator)
+	return kvs
+}
+func StatesList(iterator shim.StateQueryIteratorInterface) ([]KVJson) {
+	defer iterator.Close();
 	var kvs []KVJson
-	for keysIterator.HasNext() {
-		kv, iterErr := keysIterator.Next()
-		if iterErr != nil {
-			return nil, iterErr
-		}
-		if objectType == "" {
-			kvs = append(kvs, KVJson{Namespace: kv.Namespace, Key: kv.Key, Value: string(kv.Value)})
-		} else {
-			pKey, keys, err := ccAPI.SplitCompositeKey(kv.Key)
-			if err != nil {
-				return nil, iterErr
-			}
-			keys = append([]string{pKey}, keys...)
-			kvs = append(kvs, KVJson{Namespace: kv.Namespace, CompositeKeys: keys, Value: string(kv.Value)})
-		}
+	for iterator.HasNext() {
+		kv, err := iterator.Next();
+		PanicError(err)
+		kvs = append(kvs, KVJson{kv.Namespace, kv.Key, string(kv.Value)})
 	}
-	return kvs, nil
+	return kvs
 }
 
 type KVJson struct {
-	Namespace     string
-	Key           string
-	CompositeKeys []string
-	Value         string
+	Namespace string
+	Key       string
+	Value     string
 }
 
-func CreateCompositeKey(ccAPI shim.ChaincodeStubInterface, first string, attrs []string) string {
-	var key, err = ccAPI.CreateCompositeKey(first, attrs)
+func SplitCompositeKey(ccAPI shim.ChaincodeStubInterface, compositeKey string) (string, []string) {
+	objectType, attributes, err := ccAPI.SplitCompositeKey(compositeKey)
+	PanicError(err)
+	return objectType, attributes
+}
+func CreateCompositeKey(ccAPI shim.ChaincodeStubInterface, objectType string, attributes []string) string {
+	var key, err = ccAPI.CreateCompositeKey(objectType, attributes)
 	PanicError(err);
 	return key
 }
@@ -58,14 +55,28 @@ func PutState(ccAPI shim.ChaincodeStubInterface, key string, value []byte) {
 	PanicError(err);
 }
 
-func HistoryToArray(iterator shim.HistoryQueryIteratorInterface) (result []queryresult.KeyModification) {
+type KeyModification struct {
+	TxId      string
+	Value     string
+	Timestamp string
+	IsDelete  bool
+}
+
+func HistoryToArray(iterator shim.HistoryQueryIteratorInterface) (result []KeyModification) {
 	defer iterator.Close()
 	for {
 		if iterator.HasNext() {
 			keyModification, err := iterator.Next()
-			PanicError(err);
-			result = append(result, *keyModification)
-		}else {
+			PanicError(err)
+			var timeStamp = keyModification.Timestamp
+			var time = timeStamp.Seconds*1000 + int64(timeStamp.Nanos/1000000)
+			var translated = KeyModification{
+				keyModification.TxId,
+				string(keyModification.Value),
+				string(time),
+				keyModification.IsDelete}
+			result = append(result, translated)
+		} else {
 			break
 		}
 	}
@@ -85,4 +96,17 @@ func GetStateByRange(ccAPI shim.ChaincodeStubInterface, startKey string, endKey 
 	var r, err = ccAPI.GetStateByRange(startKey, endKey)
 	PanicError(err)
 	return r
+}
+func PanicDefer(response *peer.Response) {
+	if err := recover(); err != nil {
+		switch x := err.(type) {
+		case string:
+			err = errors.New(x)
+		case error:
+		default:
+			err = errors.New("Unknown panic")
+		}
+		response.Status = shim.ERROR
+		response.Message = err.(error).Error()
+	}
 }
