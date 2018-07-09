@@ -74,7 +74,7 @@ func TestCreateCompositeKey(t *testing.T) {
 	TxID = "composite1"
 	mock.MockTransactionStart(TxID)
 	iterator := GetStateByPartialCompositeKey(mock, "a", []string{"d"})
-	kvs := StatesList(iterator)
+	kvs := ParseStates(iterator)
 	fmt.Println(kvs)
 	mock.MockTransactionEnd(TxID)
 }
@@ -97,7 +97,7 @@ func TestWorldStates(t *testing.T) {
 	kvs := WorldStates(mock, "")
 
 	fmt.Println(kvs)
-	kvs = StatesList(GetStateByRange(mock,"a_1",""))
+	kvs = ParseStates(GetStateByRange(mock,"a_1",""))
 	fmt.Println(kvs)
 	mock.MockTransactionEnd(TxID)
 }

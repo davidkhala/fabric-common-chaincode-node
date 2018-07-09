@@ -14,10 +14,10 @@ func WorldStates(ccAPI shim.ChaincodeStubInterface, objectType string) ([]KVJson
 		keysIterator = GetStateByPartialCompositeKey(ccAPI, objectType, nil)
 	}
 
-	var kvs = StatesList(keysIterator)
+	var kvs = ParseStates(keysIterator)
 	return kvs
 }
-func StatesList(iterator shim.StateQueryIteratorInterface) ([]KVJson) {
+func ParseStates(iterator shim.StateQueryIteratorInterface) ([]KVJson) {
 	defer iterator.Close();
 	var kvs []KVJson
 	for iterator.HasNext() {
@@ -62,7 +62,7 @@ type KeyModification struct {
 	IsDelete  bool
 }
 
-func HistoryToArray(iterator shim.HistoryQueryIteratorInterface) (result []KeyModification) {
+func ParseHistory(iterator shim.HistoryQueryIteratorInterface) (result []KeyModification) {
 	defer iterator.Close()
 	for iterator.HasNext() {
 		keyModification, err := iterator.Next()
