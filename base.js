@@ -3,7 +3,7 @@ const shim = require('fabric-shim');
 class Base {
 	constructor(name) {
 		this.name = name;
-		this.logger = shim.newLogger(name ? name : base);
+		this.logger = shim.newLogger(name ? name : '');
 		this.logger.level = 'info';// to CRITICAL, ERROR, WARNING, DEBUG
 	}
 
