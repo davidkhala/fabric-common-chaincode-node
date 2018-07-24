@@ -11,10 +11,6 @@ exports.Base = class {
 		return shim.success(Buffer.from(data));
 	}
 
-	static Error(msg) {
-		return shim.error(Buffer.from(msg));
-	}
-
 	async Init(stub) {
 		this.logger.info(`########### ${this.name} Init: ${stub.getFunctionAndParameters()}`);
 		return shim.success();
