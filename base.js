@@ -8,6 +8,13 @@ exports.Base = class {
 		this.logger.level = 'debug';// to CRITICAL, ERROR, WARNING, DEBUG
 	}
 
+	/**
+	 * @param {string} name Name of the event
+	 * @param {string} payload A payload can be used to include data about the event
+	 */
+	setEvent(name, payload) {
+		this.stub.setEvent(name,Buffer.from(payload))
+	}
 	static Success(data) {
 		return exports.shim.success(Buffer.from(data));
 	}
@@ -21,6 +28,7 @@ exports.Base = class {
 	async init(stub, clientIdentity) {
 		throw new Error('init() should be implement');
 	}
+
 	/**
 	 *
 	 * @param {ChaincodeStub} stub
@@ -34,6 +42,7 @@ exports.Base = class {
 	async Init(stub) {
 		try {
 			this.logger.debug(`########### ${this.name} Init: ${stub.getFunctionAndParameters()}`);
+			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.init(stub, clientIdentity);
 			return this.constructor.Success(result);
@@ -47,10 +56,11 @@ exports.Base = class {
 	async Invoke(stub) {
 		try {
 			this.logger.info(`########### ${this.name} Invoke: ${stub.getFunctionAndParameters()}`);
+			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.invoke(stub, clientIdentity);
 			return this.constructor.Success(result);
-		}catch (err) {
+		} catch (err) {
 			this.logger.error(err);
 			return exports.shim.error(err.toString());
 		}
