@@ -41,7 +41,7 @@ exports.Base = class {
 
 	async Init(stub) {
 		try {
-			this.logger.debug(`########### ${this.name} Init: ${stub.getFunctionAndParameters()}`);
+			this.logger.debug(`########### ${this.name} Init: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.init(stub, clientIdentity);
@@ -55,7 +55,7 @@ exports.Base = class {
 
 	async Invoke(stub) {
 		try {
-			this.logger.info(`########### ${this.name} Invoke: ${stub.getFunctionAndParameters()}`);
+			this.logger.info(`########### ${this.name} Invoke: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.invoke(stub, clientIdentity);
