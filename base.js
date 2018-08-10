@@ -32,9 +32,9 @@ exports.Base = class {
 	}
 	/**
 	 * putPrivateData puts the specified `key` and `value` into the transaction's
-	 * private writeset. Note that only hash of the private writeset goes into the
+	 * private writeSet. Note that only hash of the private writeSet goes into the
 	 * transaction proposal response (which is sent to the client who issued the
-	 * transaction) and the actual private writeset gets temporarily stored in a
+	 * transaction) and the actual private writeSet gets temporarily stored in a
 	 * transient store. PutPrivateData doesn't effect the `collection` until the
 	 * transaction is validated and successfully committed. Simple keys must not be
 	 * an empty string and must not start with null character (0x00), in order to
