@@ -1,11 +1,12 @@
 exports.shim = require('fabric-shim');
 exports.ClientIdentity = require('fabric-shim/lib/chaincode').ClientIdentity;
 exports.ChaincodeStub = require('fabric-shim/lib/stub');
-exports.Base = class {
+const {getLogger} = require('fabric-shim/lib/logger');
+
+class Base {
 	constructor(name) {
 		this.name = name;
-		this.logger = exports.shim.newLogger(name ? name : '');
-		this.logger.level = 'debug';// to CRITICAL, ERROR, WARNING, DEBUG
+		this.logger = getLogger(name);
 	}
 
 	/**
@@ -15,6 +16,7 @@ exports.Base = class {
 	setEvent(name, payload) {
 		this.stub.setEvent(name, Buffer.from(payload));
 	}
+
 	/**
 	 * getPrivateData returns the value of the specified `key` from the specified
 	 * `collection`. Note that GetPrivateData doesn't read data from the
@@ -30,6 +32,7 @@ exports.Base = class {
 		const raw = await this.stub.getPrivateData(collection, key);
 		return raw.toString();
 	}
+
 	/**
 	 * putPrivateData puts the specified `key` and `value` into the transaction's
 	 * private writeSet. Note that only hash of the private writeSet goes into the
@@ -48,6 +51,7 @@ exports.Base = class {
 	async putPrivateData(collection, key, value) {
 		return this.stub.putPrivateData(collection, key, Buffer.from(value));
 	}
+
 	static Success(data) {
 		return exports.shim.success(Buffer.from(data));
 	}
@@ -74,7 +78,7 @@ exports.Base = class {
 
 	async Init(stub) {
 		try {
-			this.logger.debug(`########### ${this.name} Init: ${JSON.stringify(stub.getFunctionAndParameters())}`);
+			this.logger.debug(`Init: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.init(stub, clientIdentity);
@@ -83,12 +87,11 @@ exports.Base = class {
 			this.logger.error(err);
 			return exports.shim.error(err.toString());
 		}
-
 	}
 
 	async Invoke(stub) {
 		try {
-			this.logger.info(`########### ${this.name} Invoke: ${JSON.stringify(stub.getFunctionAndParameters())}`);
+			this.logger.info(`Invoke: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
 			const clientIdentity = new exports.ClientIdentity(stub);
 			const result = await this.invoke(stub, clientIdentity);
@@ -101,3 +104,4 @@ exports.Base = class {
 
 };
 
+exports.Base = Base;
