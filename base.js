@@ -1,9 +1,7 @@
-exports.shim = require('fabric-shim');
-exports.ClientIdentity = require('fabric-shim/lib/chaincode').ClientIdentity;
-exports.ChaincodeStub = require('fabric-shim/lib/stub');
+const {shim, ClientIdentity} = require('./index');
 const {getLogger} = require('fabric-shim/lib/logger');
 
-class Base {
+class CommonChaincode {
 	constructor(name) {
 		this.name = name;
 		this.logger = getLogger(name);
@@ -53,26 +51,24 @@ class Base {
 	}
 
 	static Success(data) {
-		return exports.shim.success(Buffer.from(data));
+		return shim.success(Buffer.from(data));
 	}
 
 	/**
 	 *
 	 * @param {ChaincodeStub} stub
-	 * @param {ClientIdentity} clientIdentity
 	 * @returns {Promise<string>}
 	 */
-	async init(stub, clientIdentity) {
+	async init(stub) {
 		throw new Error('init() should be implement');
 	}
 
 	/**
 	 *
 	 * @param {ChaincodeStub} stub
-	 * @param {ClientIdentity} clientIdentity
 	 * @returns {Promise<string>}
 	 */
-	async invoke(stub, clientIdentity) {
+	async invoke(stub) {
 		throw new Error('invoke() should be implement');
 	}
 
@@ -80,12 +76,11 @@ class Base {
 		try {
 			this.logger.debug(`Init: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
-			const clientIdentity = new exports.ClientIdentity(stub);
-			const result = await this.init(stub, clientIdentity);
-			return this.constructor.Success(result);
+			const result = await this.init(stub);
+			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err);
-			return exports.shim.error(err.toString());
+			return shim.error(err.toString());
 		}
 	}
 
@@ -93,15 +88,14 @@ class Base {
 		try {
 			this.logger.info(`Invoke: ${JSON.stringify(stub.getFunctionAndParameters())}`);
 			this.stub = stub;
-			const clientIdentity = new exports.ClientIdentity(stub);
-			const result = await this.invoke(stub, clientIdentity);
-			return this.constructor.Success(result);
+			const result = await this.invoke(stub);
+			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err);
-			return exports.shim.error(err.toString());
+			return shim.error(err.toString());
 		}
 	}
 
-};
+}
 
-exports.Base = Base;
+module.exports = CommonChaincode;
