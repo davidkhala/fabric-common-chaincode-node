@@ -1,4 +1,5 @@
-exports.shim = require('fabric-shim');
-exports.ClientIdentity = require('fabric-shim/lib/chaincode').ClientIdentity;
-exports.ChaincodeStub = require('fabric-shim/lib/stub');
+const shim = require('fabric-shim');
+exports.shim = shim;
+exports.ClientIdentity = shim.ClientIdentity;
+exports.ChaincodeStub = shim.ChaincodeStub;
 exports.CommonChaincode = require('./base');
