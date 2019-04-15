@@ -4,7 +4,7 @@ const {getLogger} = require('fabric-shim/lib/logger');
 class CommonChaincode {
 	constructor(name) {
 		this.name = name;
-		this.Logger = getLogger(name);
+		this.logger = getLogger(name);
 	}
 
 	/**
@@ -59,15 +59,6 @@ class CommonChaincode {
 	// getPrivateDataByPartialCompositeKey(collection: string, objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
 	// getPrivateDataQueryResult(collection: string, query: string): Promise<Iterators.StateQueryIterator>;
 
-	/**
-	 * @param {string} collection The collection name
-	 * @param {string} key Private data variable key to set the value for
-	 * @param {string} value Private data variable value
-	 */
-	async putPrivateData(collection, key, value) {
-		return this.stub.putPrivateData(collection, key, Buffer.from(value));
-	}
-
 	static Success(data) {
 		return shim.success(Buffer.from(data));
 	}
@@ -93,13 +84,13 @@ class CommonChaincode {
 	async Init(stub) {
 		try {
 			const {params, fcn} = stub.getFunctionAndParameters();
-			this.Logger.info('Init', fcn);
-			this.Logger.debug(fcn, params);
+			this.logger.info('Init', fcn);
+			this.logger.debug(fcn, params);
 			this.stub = stub;
 			const result = await this.init(stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.Logger.error(err);
+			this.logger.error(err);
 			return shim.error(err.toString());
 		}
 	}
@@ -107,13 +98,13 @@ class CommonChaincode {
 	async Invoke(stub) {
 		try {
 			const {params, fcn} = stub.getFunctionAndParameters();
-			this.Logger.info('Invoke', fcn);
-			this.Logger.debug(fcn, params);
+			this.logger.info('Invoke', fcn);
+			this.logger.debug(fcn, params);
 			this.stub = stub;
 			const result = await this.invoke(stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.Logger.error(err);
+			this.logger.error(err);
 			return shim.error(err.toString());
 		}
 	}
