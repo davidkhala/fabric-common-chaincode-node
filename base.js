@@ -1,10 +1,10 @@
-const {shim, ClientIdentity} = require('./index');
+const {shim, ClientIdentity, ChaincodeStub} = require('./index');
 const {getLogger} = require('fabric-shim/lib/logger');
 
 class CommonChaincode {
 	constructor(name) {
 		this.name = name;
-		this.logger = getLogger(name);
+		this.Logger = getLogger(name);
 	}
 
 	/**
@@ -16,12 +16,16 @@ class CommonChaincode {
 	}
 
 	/**
-	 * getPrivateData returns the value of the specified `key` from the specified
-	 * `collection`. Note that GetPrivateData doesn't read data from the
-	 * private writeset, which has not been committed to the `collection`. In
-	 * other words, GetPrivateData doesn't consider data modified by PutPrivateData
-	 * that has not been committed.
-	 *
+	 * @async
+	 * @param {string} key State variable key to retrieve from the state store
+	 * @returns {Promise<string>} Promise for the current value of the state variable
+	 */
+	async getState(key) {
+		const state = await this.stub.getState(key);
+		return state.toString();
+	}
+
+	/**
 	 * @param {string} collection The collection name
 	 * @param {string} key Private data variable key to retrieve from the state store
 	 * @returns {string} value
@@ -31,17 +35,31 @@ class CommonChaincode {
 		return raw.toString();
 	}
 
+	// getStateByRange(startKey: string, endKey: string): Promise<Iterators.StateQueryIterator>;
+	// getStateByRangeWithPagination(startKey: string, endKey: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
+	// getStateByPartialCompositeKey(objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
+	// getStateByPartialCompositeKeyWithPagination(objectType: string, attributes: string[], pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
+	//
+	// getQueryResult(query: string): Promise<Iterators.StateQueryIterator>;
+	// getQueryResultWithPagination(query: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
+	// getHistoryForKey(key: string): Promise<Iterators.HistoryQueryIterator>;
+	//
+	// invokeChaincode(chaincodeName: string, args: string[], channel: string): Promise<ChaincodeResponse>;
+	// setEvent(name: string, payload: Buffer): void;
+	//
+	// createCompositeKey(objectType: string, attributes: string[]): string;
+	// splitCompositeKey(compositeKey: string): SplitCompositekey;
+	//
+	// getPrivateData(collection: string, key: string): Promise<Buffer>;
+	// putPrivateData(collection: string, key: string, value: Buffer): Promise<void>;
+	// deletePrivateData(collection: string, key: string): Promise<void>;
+	// setPrivateDataValidationParameter(collection: string, key: string, ep: Buffer): Promise<void>;
+	// getPrivateDataValidationParameter(collection: string, key: string): Promise<Buffer>;
+	// getPrivateDataByRange(collection: string, startKey: string, endKey: string): Promise<Iterators.StateQueryIterator>;
+	// getPrivateDataByPartialCompositeKey(collection: string, objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
+	// getPrivateDataQueryResult(collection: string, query: string): Promise<Iterators.StateQueryIterator>;
+
 	/**
-	 * putPrivateData puts the specified `key` and `value` into the transaction's
-	 * private writeSet. Note that only hash of the private writeSet goes into the
-	 * transaction proposal response (which is sent to the client who issued the
-	 * transaction) and the actual private writeSet gets temporarily stored in a
-	 * transient store. PutPrivateData doesn't effect the `collection` until the
-	 * transaction is validated and successfully committed. Simple keys must not be
-	 * an empty string and must not start with null character (0x00), in order to
-	 * avoid range query collisions with composite keys, which internally get
-	 * prefixed with 0x00 as composite key namespace.
-	 *
 	 * @param {string} collection The collection name
 	 * @param {string} key Private data variable key to set the value for
 	 * @param {string} value Private data variable value
@@ -74,24 +92,28 @@ class CommonChaincode {
 
 	async Init(stub) {
 		try {
-			this.logger.debug(`Init: ${JSON.stringify(stub.getFunctionAndParameters())}`);
+			const {params, fcn} = stub.getFunctionAndParameters();
+			this.Logger.info('Init', fcn);
+			this.Logger.debug(fcn, params);
 			this.stub = stub;
 			const result = await this.init(stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.logger.error(err);
+			this.Logger.error(err);
 			return shim.error(err.toString());
 		}
 	}
 
 	async Invoke(stub) {
 		try {
-			this.logger.info(`Invoke: ${JSON.stringify(stub.getFunctionAndParameters())}`);
+			const {params, fcn} = stub.getFunctionAndParameters();
+			this.Logger.info('Invoke', fcn);
+			this.Logger.debug(fcn, params);
 			this.stub = stub;
 			const result = await this.invoke(stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.logger.error(err);
+			this.Logger.error(err);
 			return shim.error(err.toString());
 		}
 	}
