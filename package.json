@@ -1,6 +1,6 @@
 {
   "name": "fabric-common-chaincode",
-  "version": "0.0.142",
+  "version": "0.0.143",
   "author": "davidliu  <david-khala@hotmail.com>",
   "repository": "davidkhala/fabric-common-chaincode-node",
   "license": "Apache-2.0",

@@ -59,7 +59,7 @@ class CommonChaincode {
 	// getPrivateDataByPartialCompositeKey(collection: string, objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
 	// getPrivateDataQueryResult(collection: string, query: string): Promise<Iterators.StateQueryIterator>;
 
-	static Success(data) {
+	static Success(data = '') {
 		return shim.success(Buffer.from(data));
 	}
 
