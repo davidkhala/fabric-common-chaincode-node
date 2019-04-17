@@ -6,12 +6,12 @@ class CID extends shim.ClientIdentity {
 	}
 
 	toString() {
-		return {
+		return JSON.stringify({
 			mspId: this.mspId,
 			cert: this.cert,
 			attrs: this.attrs,
 			id: this.id
-		};
+		});
 	}
 }
 
