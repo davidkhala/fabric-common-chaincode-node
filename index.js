@@ -1,6 +1,6 @@
 const shim = require('fabric-shim');
 exports.shim = shim;
-exports.ClientIdentity = shim.ClientIdentity;
+exports.ClientIdentity = require('./CID');
 exports.ChaincodeStub = shim.ChaincodeStub;
 exports.KeyEndorsementPolicy = shim.KeyEndorsementPolicy;
 
