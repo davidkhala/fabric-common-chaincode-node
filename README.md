@@ -1,5 +1,9 @@
 
-# npm fabric-common-chaincode
+# fabric-common-chaincode
+
+home of 
+`npm fabric-common-chaincode`
+`npm khala-fabric-contract-api`
 
 
 ## Reference
