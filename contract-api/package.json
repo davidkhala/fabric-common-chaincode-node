@@ -1,10 +1,11 @@
 {
-  "name": "fabric-common-chaincode",
+  "name": "khala-contract-api",
   "version": "1.4.2-0.0.0",
   "author": "davidliu  <david-khala@hotmail.com>",
   "repository": "davidkhala/fabric-common-chaincode-node",
   "license": "Apache-2.0",
   "dependencies": {
+    "fabric-contract-api": "^1.4.2",
     "fabric-shim": "^1.4.2"
   }
 }
