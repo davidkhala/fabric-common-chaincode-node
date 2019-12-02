@@ -1,8 +1,9 @@
+const shim = require('fabric-shim');
 /**
  * @class
  * @typedef {Context} ContextAlias
- * @property {ChaincodeStub} stub
- * @property {ClientIdentity} clientIdentity
+ * @property {shim.ChaincodeStub} stub
+ * @property {shim.ClientIdentity} clientIdentity
  * @property {{setLevel:SetLevel, getLogger:GetLogger}} logging
  *
  */
@@ -14,6 +15,6 @@
 /**
  * @typedef {function} GetLogger
  * @param {string} [name]
- * @return {Logger}
+ * @return {winston.Logger}
  */
 
