@@ -1,6 +1,6 @@
 {
   "name": "khala-fabric-contract-api",
-  "version": "1.4.2-0.0.0",
+  "version": "1.4.2-0.0.1",
   "author": "davidliu  <david-khala@hotmail.com>",
   "repository": "davidkhala/fabric-common-chaincode-node",
   "license": "Apache-2.0",
