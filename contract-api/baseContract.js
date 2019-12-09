@@ -70,17 +70,19 @@ class BaseContract extends Contract {
 	/**
 	 * 'init' as a default fcn in sdk-node
 	 * @param {Context} context the transaction context
+	 * @param {string[]} [params]
 	 */
-	async init(context) {
-		this.logger.info(context);
+	async init(context, ...params) {
+		this.logger.info('init', ...params);
 	}
 
 	/**
 	 * 'invoke' as a default fcn in sdk-node
 	 * @param {Context} context the transaction context
+	 * @param {string[]} [params]
 	 */
-	async invoke(context) {
-		this.logger.info('invoke', this.getName());
+	async invoke(context, ...params) {
+		this.logger.info('invoke', ...params);
 	}
 
 }
