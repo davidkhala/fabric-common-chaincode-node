@@ -1,4 +1,3 @@
-
 # fabric-common-chaincode
 
 home of 
