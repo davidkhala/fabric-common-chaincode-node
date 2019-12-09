@@ -5,10 +5,14 @@ class CID extends shim.ClientIdentity {
 		super(stub);
 	}
 
+	getCertPem() {
+		return this.stub.getCreator().id_bytes.toString('utf8');
+	}
+
 	toString() {
 		return JSON.stringify({
 			mspId: this.mspId,
-			cert: this.cert,
+			certPem: this.getCertPem(),
 			attrs: this.attrs,
 			id: this.id
 		});
