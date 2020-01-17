@@ -3,7 +3,7 @@ const {Contract, Context} = require('fabric-contract-api');
 class BaseContract extends Contract {
 
 	constructor(name = '-') {
-		// Supplying a name is required, otherwize init function could not be discovered
+		// Supplying a name is required, otherwise init function could not be discovered
 		// name could be got by getName()
 		super(name);
 	}
