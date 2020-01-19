@@ -1,6 +1,9 @@
 const shim = require('fabric-shim');
 
 class CID extends shim.ClientIdentity {
+	/**
+	 * @param {shim.ChaincodeStub} stub
+	 */
 	constructor(stub) {
 		super(stub);
 	}
