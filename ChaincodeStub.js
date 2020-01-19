@@ -7,8 +7,8 @@ class ChaincodeStub {
 		this.transient = {};
 		for (const [key, value] of Object.entries(stub.getTransient().map)) {
 			this.transient[key] = value.value.buffer.toString().split('\u0012\u0001')[1];
-			//TODO "\n�\u0006\nr\b\u0003\u0010\u0001\u001a\f\b�̎�\u0005\u0010����\u0001\"\nallchannel*@33b52566abb75271cc2d69a46e351835d09c74d1065bae3267a4b6e5d830e548:\u0010\u0012\u000e\u0012\fnodeDiagnose\u0012�\u0005\n�\u0005\n\bASTRIMSP\u0012�\u0005-----BEGIN CERTIFICATE-----\nMIIB5DCCAYqgAwIBAgIUPHlucPVhDBmiqh3/2kMZIUid3dEwCgYIKoZIzj0EAwIw\nYTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRIwEAYDVQQDEwlhc3RyaS5v\ncmcwHhcNMjAwMTE5MDAzODAwWhcNMjEwMTE4MDA0MzAwWjAhMQ8wDQYDVQQLEwZj\nbGllbnQxDjAMBgNVBAMTBUFkbWluMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nDto1cSQlquPkacSUhFyxX02SXp+RNylnXQl1OX+aIbrr6xXxHk/3n7OAHMsy1yp0\nYY9zIBbzKKKJ4y94aKtnu6NgMF4wDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQC\nMAAwHQYDVR0OBBYEFP/yAN0NthnUplt0ceB9hVOxeIJGMB8GA1UdIwQYMBaAFENE\nnvGYa2N5uRFUJigi7NCZocKMMAoGCCqGSM49BAMCA0gAMEUCIQDBMr821jPgOAMG\nJ1EMrDIc5OOOKRFvSQ5mdXvdRaejgAIgMrFM6gsXr5/wUKL5Nyx06cDMTplvbD82\nyN1s+vfy0nw=\n-----END CERTIFICATE-----\n\u0012\u0018H\u0007�7\"������%�x�Ԅ�1pt��\u0012#\n\u0019\n\u0017\b\u0001\u0012\u000e\u0012\fnodeDiagnose\u001a\u0003\n\u0001-\u0012\u0006\n\u0001a\u0012\u0001b"
 		}
+		//TODO "\n�\u0006\nr\b\u0003\u0010\u0001\u001a\f\b�̎�\u0005\u0010����\u0001\"\nallchannel*@33b52566abb75271cc2d69a46e351835d09c74d1065bae3267a4b6e5d830e548:\u0010\u0012\u000e\u0012\fnodeDiagnose\u0012�\u0005\n�\u0005\n\bASTRIMSP\u0012�\u0005-----BEGIN CERTIFICATE-----\nMIIB5DCCAYqgAwIBAgIUPHlucPVhDBmiqh3/2kMZIUid3dEwCgYIKoZIzj0EAwIw\nYTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRIwEAYDVQQDEwlhc3RyaS5v\ncmcwHhcNMjAwMTE5MDAzODAwWhcNMjEwMTE4MDA0MzAwWjAhMQ8wDQYDVQQLEwZj\nbGllbnQxDjAMBgNVBAMTBUFkbWluMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\nDto1cSQlquPkacSUhFyxX02SXp+RNylnXQl1OX+aIbrr6xXxHk/3n7OAHMsy1yp0\nYY9zIBbzKKKJ4y94aKtnu6NgMF4wDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQC\nMAAwHQYDVR0OBBYEFP/yAN0NthnUplt0ceB9hVOxeIJGMB8GA1UdIwQYMBaAFENE\nnvGYa2N5uRFUJigi7NCZocKMMAoGCCqGSM49BAMCA0gAMEUCIQDBMr821jPgOAMG\nJ1EMrDIc5OOOKRFvSQ5mdXvdRaejgAIgMrFM6gsXr5/wUKL5Nyx06cDMTplvbD82\nyN1s+vfy0nw=\n-----END CERTIFICATE-----\n\u0012\u0018H\u0007�7\"������%�x�Ԅ�1pt��\u0012#\n\u0019\n\u0017\b\u0001\u0012\u000e\u0012\fnodeDiagnose\u001a\u0003\n\u0001-\u0012\u0006\n\u0001a\u0012\u0001b"
 	}
 
 	/**
@@ -41,9 +41,9 @@ class ChaincodeStub {
 	/**
 	 * @override
 	 * Returns an object containing the chaincode function name to invoke, and the array of arguments to pass to the target function
-	 * @return {Promise<{params:string,fcn:string}>}
+	 * @return {{params:string,fcn:string}}
 	 */
-	async getFunctionAndParameters() {
+	getFunctionAndParameters() {
 		return this.stub.getFunctionAndParameters();
 	}
 
