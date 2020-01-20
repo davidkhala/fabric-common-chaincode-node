@@ -1,3 +1,7 @@
+const Microsecond = 1000;
+const Millisecond = 1000 * Microsecond;
+const Second = 1000 * Millisecond;
+
 class ChaincodeStub {
 	/**
 	 * @param {shim.ChaincodeStub} stub
@@ -68,6 +72,13 @@ class ChaincodeStub {
 		return this.transient[key];
 	}
 
+	/**
+	 * @override
+	 * @return {string}
+	 */
+	getTxID() {
+		return this.stub.getTxID();
+	}
 
 	/**
 	 * @async
@@ -78,7 +89,21 @@ class ChaincodeStub {
 	 */
 	async invokeChaincode(chaincodeName, args, channel) {
 		const {status, message, payload} = await this.stub.invokeChaincode(chaincodeName, args, channel);
-		return {status, message, payload: payload.toString()};
+		const payloadString = payload.toString('utf8');
+		if (status >= 400) {
+			throw Error(JSON.stringify({status, message, payload: payloadString}));
+		}
+
+		return {status, message, payload: payloadString};
+	}
+
+	/**
+	 *
+	 * @return {number} Unix elapsed nanoseconds
+	 */
+	getTxTimestamp() {
+		const s = this.stub.getTxTimestamp();
+		return s.getSeconds() * Second + s.getNanos();
 	}
 
 	// getStateByRange(startKey: string, endKey: string): Promise<Iterators.StateQueryIterator>;
@@ -96,8 +121,20 @@ class ChaincodeStub {
 	// createCompositeKey(objectType: string, attributes: string[]): string;
 	// splitCompositeKey(compositeKey: string): SplitCompositekey;
 	//
-	// getPrivateData(collection: string, key: string): Promise<Buffer>;
-	// putPrivateData(collection: string, key: string, value: Buffer): Promise<void>;
+
+
+	/**
+	 * @override
+	 * @param collection
+	 * @param key
+	 * @param value
+	 * @return {Promise<void>}
+	 */
+	async putPrivateData(collection, key, value) {
+		await this.stub.putPrivateData(collection, key, value);
+	}
+
+
 	// deletePrivateData(collection: string, key: string): Promise<void>;
 	// setPrivateDataValidationParameter(collection: string, key: string, ep: Buffer): Promise<void>;
 	// getPrivateDataValidationParameter(collection: string, key: string): Promise<Buffer>;
