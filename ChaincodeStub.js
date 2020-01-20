@@ -68,6 +68,19 @@ class ChaincodeStub {
 		return this.transient[key];
 	}
 
+
+	/**
+	 * @async
+	 * @param {string} chaincodeName
+	 * @param {string[]} args
+	 * @param {string} [channel] If `channel` is falsy, the caller's channel is assumed.
+	 * @return {Promise<{status:number,message:string,payload:string}>}
+	 */
+	async invokeChaincode(chaincodeName, args, channel) {
+		const {status, message, payload} = await this.stub.invokeChaincode(chaincodeName, args, channel);
+		return {status, message, payload: payload.toString()};
+	}
+
 	// getStateByRange(startKey: string, endKey: string): Promise<Iterators.StateQueryIterator>;
 	// getStateByRangeWithPagination(startKey: string, endKey: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	// getStateByPartialCompositeKey(objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
@@ -77,7 +90,7 @@ class ChaincodeStub {
 	// getQueryResultWithPagination(query: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	// getHistoryForKey(key: string): Promise<Iterators.HistoryQueryIterator>;
 	//
-	// invokeChaincode(chaincodeName: string, args: string[], channel: string): Promise<ChaincodeResponse>;
+
 	// setEvent(name: string, payload: Buffer): void;
 	//
 	// createCompositeKey(objectType: string, attributes: string[]): string;
