@@ -1,4 +1,4 @@
-# fabric-common-chaincode
+# fabric-common-chaincode-node
 
 home of 
 - `npm fabric-common-chaincode`
