@@ -1,19 +1,4 @@
 //TODO
-//func ParseStates(iterator shim.StateQueryIteratorInterface, filter func(StateKV) bool) []StateKV {
-// 	defer PanicError(iterator.Close())
-// 	var kvs []StateKV
-// 	for iterator.HasNext() {
-// 		kv, err := iterator.Next()
-// 		PanicError(err)
-// 		var stateKV = StateKV{kv.Namespace, kv.Key, string(kv.Value)}
-// 		if filter == nil || filter(stateKV) {
-// 			kvs = append(kvs, stateKV)
-// 		}
-// 	}
-// 	return kvs
-// }
-
-//TODO
 //func ParseHistory(iterator shim.HistoryQueryIteratorInterface, filter func(KeyModification) bool) []KeyModification {
 // 	defer PanicError(iterator.Close())
 // 	var result []KeyModification
@@ -36,22 +21,37 @@
 
 
 /**
- * @param {Iterators.HistoryQueryIterator} iterator
- * @param {function} filter
- * @return {Promise<KV[]>}
+ * @param {Iterators.StateQueryIterator} iterator
+ * @param {function} [filter]
+ * @return {Promise<KeyValue[]>}
  */
-const ParseStates = async (iterator, filter) => {
+const parseStates = async (iterator, filter) => {
 
+	const result = [];
+	const loop = async () => {
+		const {value: {namespace, key, value}, done} = await iterator.next();
+		/**
+		 * @type {KeyValue}
+		 */
+		const kv = {namespace, key, value: value.toString('utf8')};
+		if (!filter || filter(kv)) {
+			result.push(kv);
+		}
+		if (!done) {
+			await loop();
+		}
+	};
+	await loop();
+	return result;
 };
 
 /**
- *
- * @param {Iterators.StateQueryIterator} iterator
- * @param {function} filter
+ * @param {Iterators.HistoryQueryIterator} iterator
+ * @param {function} [filter]
  * @return {Promise<KeyModification[]>}
  */
-const ParseHistory = async (iterator, filter) => {
+const parseHistory = async (iterator, filter) => {
 
 };
-exports.ParseStates = ParseStates;
-exports.ParseHistory = ParseHistory;
+exports.ParseStates = parseStates;
+exports.ParseHistory = parseHistory;

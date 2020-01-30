@@ -106,7 +106,16 @@ class ChaincodeStub {
 		return s.getSeconds() * Second + s.getNanos();
 	}
 
-	// getStateByRange(startKey: string, endKey: string): Promise<Iterators.StateQueryIterator>;
+	/**
+	 *
+	 * @param {string} [startKey]
+	 * @param {string} [endKey]
+	 * @return {Promise<Iterators.StateQueryIterator>}
+	 */
+	async getStateByRange(startKey = '', endKey = '') {
+		return await this.stub.getStateByRange(startKey, endKey);
+	}
+
 	// getStateByRangeWithPagination(startKey: string, endKey: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	// getStateByPartialCompositeKey(objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
 	// getStateByPartialCompositeKeyWithPagination(objectType: string, attributes: string[], pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
@@ -134,6 +143,16 @@ class ChaincodeStub {
 		await this.stub.putPrivateData(collection, key, value);
 	}
 
+	/**
+	 *
+	 * @param {string} collection
+	 * @param {string} [startKey]
+	 * @param {string} [endKey]
+	 * @return {Promise<Iterators.StateQueryIterator>}
+	 */
+	async getPrivateDataByRange(collection, startKey = '', endKey = '') {
+		return await this.stub.getPrivateDataByRange(collection, startKey, endKey);
+	}
 
 	// deletePrivateData(collection: string, key: string): Promise<void>;
 	// setPrivateDataValidationParameter(collection: string, key: string, ep: Buffer): Promise<void>;
