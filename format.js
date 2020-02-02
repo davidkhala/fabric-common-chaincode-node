@@ -1,24 +1,4 @@
-//TODO
-//func ParseHistory(iterator shim.HistoryQueryIteratorInterface, filter func(KeyModification) bool) []KeyModification {
-// 	defer PanicError(iterator.Close())
-// 	var result []KeyModification
-// 	for iterator.HasNext() {
-// 		keyModification, err := iterator.Next()
-// 		PanicError(err)
-// 		var timeStamp = keyModification.Timestamp
-// 		var t = timeStamp.Seconds*1000 + int64(timeStamp.Nanos/1000000)
-// 		var translated = KeyModification{
-// 			keyModification.TxId,
-// 			keyModification.Value,
-// 			TimeLong(t),
-// 			keyModification.IsDelete}
-// 		if filter == nil || filter(translated) {
-// 			result = append(result, translated)
-// 		}
-// 	}
-// 	return result
-// }
-
+const {getNanos} = require('./protobuf.Timestamp');
 
 /**
  * @param {Iterators.StateQueryIterator} iterator
@@ -51,7 +31,24 @@ const parseStates = async (iterator, filter) => {
  * @return {Promise<KeyModification[]>}
  */
 const parseHistory = async (iterator, filter) => {
+	const result = [];
+	const loop = async () => {
+		const {value: {is_delete, value, timestamp, tx_id}, done} = await iterator.next();
+		/**
+		 * @type {KeyModification}
+		 */
+		const km = {is_delete, tx_id, value: value.toString('utf8'), timestamp: getNanos(timestamp)};
+		if (!filter || filter(km)) {
+			result.push(km);
+		}
 
+		if (!done) {
+			await loop();
+		}
+	};
+	await loop();
+
+	return result;
 };
 exports.ParseStates = parseStates;
 exports.ParseHistory = parseHistory;

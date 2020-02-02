@@ -1,6 +1,4 @@
-const Microsecond = 1000;
-const Millisecond = 1000 * Microsecond;
-const Second = 1000 * Millisecond;
+const {getNanos} = require('./protobuf.Timestamp');
 
 class ChaincodeStub {
 	/**
@@ -99,11 +97,11 @@ class ChaincodeStub {
 
 	/**
 	 *
-	 * @return {number} Unix elapsed nanoseconds
+	 * @return {Timestamp.Nanosecond}
 	 */
 	getTxTimestamp() {
 		const s = this.stub.getTxTimestamp();
-		return s.getSeconds() * Second + s.getNanos();
+		return getNanos(s);
 	}
 
 	/**
@@ -116,13 +114,23 @@ class ChaincodeStub {
 		return await this.stub.getStateByRange(startKey, endKey);
 	}
 
+	/**
+	 *
+	 * @param {string} key
+	 * @return {Promise<Iterators.HistoryQueryIterator>}
+	 */
+	async getHistoryForKey(key) {
+		return await this.stub.getHistoryForKey(key);
+	}
+
+
 	// getStateByRangeWithPagination(startKey: string, endKey: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	// getStateByPartialCompositeKey(objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
 	// getStateByPartialCompositeKeyWithPagination(objectType: string, attributes: string[], pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	//
 	// getQueryResult(query: string): Promise<Iterators.StateQueryIterator>;
 	// getQueryResultWithPagination(query: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
-	// getHistoryForKey(key: string): Promise<Iterators.HistoryQueryIterator>;
+
 	//
 
 	// setEvent(name: string, payload: Buffer): void;

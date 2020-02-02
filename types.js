@@ -5,6 +5,16 @@
  * @property {string} key
  * @property {string} value
  */
+
+/**
+ * @typedef KeyModification
+ * @type {Object}
+ * @property {boolean} is_delete
+ * @property {string} value
+ * @property {Timestamp.Nanosecond} timestamp
+ * @property {string} tx_id
+ */
+
 /**
  * @typedef ClientIdentityData
  * @type {Object}
