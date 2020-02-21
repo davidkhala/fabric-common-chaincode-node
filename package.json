@@ -1,6 +1,6 @@
 {
   "name": "fabric-common-chaincode",
-  "version": "1.4.4-0.1.15",
+  "version": "1.4.5-0.0.0",
   "author": "davidliu  <david-khala@hotmail.com>",
   "repository": {
     "type": "git",
@@ -8,8 +8,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "fabric-shim": "^1.4.4"
+    "fabric-shim": "^1.4.5"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
