@@ -1,6 +1,13 @@
-const {shim} = require('./index');
+const shim = require('fabric-shim');
 const {getLogger} = require('fabric-shim/lib/logger');
 const ChaincodeStub = require('./ChaincodeStub');
+
+const fcnNameFilter = (fcn) => {
+	const lowerFcn = fcn.toLowerCase();
+	return lowerFcn[0] !== '_' &&
+		lowerFcn !== 'init' &&
+		lowerFcn !== 'invoke';
+};
 
 class CommonChaincode {
 	constructor(name) {
@@ -10,6 +17,13 @@ class CommonChaincode {
 
 	static Success(data = '') {
 		return shim.success(Buffer.from(data));
+	}
+
+	/**
+	 * @param {CommonChaincode} chaincodeInstance
+	 */
+	static Start(chaincodeInstance) {
+		shim.start(chaincodeInstance);
 	}
 
 	/**
@@ -27,7 +41,12 @@ class CommonChaincode {
 	 * @returns {Promise<string>}
 	 */
 	async invoke(stub) {
-		throw new Error('invoke() should be implement');
+		const [fcn, params] = stub.getFunctionAndParameters();
+		if (typeof this[fcn] === 'function' && fcnNameFilter(fcn)) {
+			return await this[fcn](stub, ...params);
+		} else {
+			throw Error('unknownTransaction');
+		}
 	}
 
 	async Init(stub) {
