@@ -7,6 +7,9 @@ home of
 
 ## Notes
 - nodejs chaincode do not suffer from >100 iterator size limit   
+
+
+## TODO
 - `fabric-shim` will wrap uncaught exception in this way
     `message=transaction returned with failure: Error: ${originalError.message}`
     This make error diagnose and handling harder
