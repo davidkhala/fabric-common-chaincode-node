@@ -19,6 +19,10 @@ class CommonChaincode {
 		return shim.success(Buffer.from(data));
 	}
 
+	static Error(err) {
+		return shim.error(err.message);
+	}
+
 	/**
 	 * @param {CommonChaincode} chaincodeInstance
 	 */
@@ -59,7 +63,7 @@ class CommonChaincode {
 			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err);
-			return shim.error(err.toString());
+			return CommonChaincode.Error(err);
 		}
 	}
 
@@ -73,7 +77,7 @@ class CommonChaincode {
 			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err);
-			return shim.error(err.toString());
+			return CommonChaincode.Error(err);
 		}
 	}
 
