@@ -41,7 +41,7 @@ class CommonChaincode {
 	 * @returns {Promise<string>}
 	 */
 	async invoke(stub) {
-		const [fcn, params] = stub.getFunctionAndParameters();
+		const {fcn, params} = stub.getFunctionAndParameters();
 		if (typeof this[fcn] === 'function' && fcnNameFilter(fcn)) {
 			return await this[fcn](stub, ...params);
 		} else {
