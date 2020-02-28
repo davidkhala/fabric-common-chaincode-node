@@ -19,8 +19,10 @@ class CommonChaincode {
 		return shim.success(Buffer.from(data));
 	}
 
-	static Error(err) {
-		return shim.error(err.message);
+	static Error(err, payload = Buffer.from(err.message)) {
+		const shimError = shim.error(err.message);
+		shimError.payload = payload;
+		return shimError;
 	}
 
 	/**
