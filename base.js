@@ -16,6 +16,9 @@ class CommonChaincode {
 	}
 
 	static Success(data = '') {
+		if(typeof data ==='object'){
+			data = JSON.stringify(data)
+		}
 		return shim.success(Buffer.from(data));
 	}
 
@@ -35,7 +38,7 @@ class CommonChaincode {
 	/**
 	 *
 	 * @param {ChaincodeStub} stub
-	 * @returns {Promise<string>}
+	 * @returns {Promise<string|*>}
 	 */
 	async init(stub) {
 		throw new Error('init() should be implement');
@@ -44,7 +47,7 @@ class CommonChaincode {
 	/**
 	 *
 	 * @param {ChaincodeStub} stub
-	 * @returns {Promise<string>}
+	 * @returns {Promise<string|*>}
 	 */
 	async invoke(stub) {
 		const {fcn, params} = stub.getFunctionAndParameters();
