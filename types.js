@@ -1,23 +1,5 @@
 /**
- * @typedef KeyValue
- * @type {Object}
- * @property {string} namespace
- * @property {string} key
- * @property {string} value
- */
-
-/**
- * @typedef KeyModification
- * @type {Object}
- * @property {boolean} is_delete
- * @property {string} value
- * @property {Timestamp.Nanosecond} timestamp
- * @property {string} tx_id
- */
-
-/**
- * @typedef ClientIdentityData
- * @type {Object}
+ * @typedef {Object} ClientIdentityData
  * @property {MspId} MspID
  * @property {string} CertificatePem
  * @property {Attributes} Attrs
@@ -26,8 +8,7 @@
 
 
 /**
- * @typedef Attributes
- * @type {Object}
+ * @typedef {Object} Attributes
  * @property {Map<string,string>} attrs
  */
 

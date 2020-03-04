@@ -1,6 +1,6 @@
 {
   "name": "fabric-common-chaincode",
-  "version": "1.4.5-0.1.6",
+  "version": "1.4.5-0.1.7",
   "author": "davidliu  <david-khala@hotmail.com>",
   "repository": {
     "type": "git",

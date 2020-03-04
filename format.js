@@ -1,23 +1,23 @@
-const {getNanos} = require('./protobuf.Timestamp');
-
+const KeyModification = require('./keyModification');
+const KeyValue = require('./keyValue');
 /**
  * @param {Iterators.StateQueryIterator} iterator
- * @param {function} [filter]
+ * @param {function(KeyValue):boolean} [filter]
+ * @param {function(KeyValue,KeyValue[]):boolean} [paginator] return falsy to break the loop
  * @return {Promise<KeyValue[]>}
  */
-const parseStates = async (iterator, filter) => {
-
+const parseStates = async (iterator, filter, paginator) => {
+	if (!paginator) {
+		paginator = _ => true;
+	}
 	const result = [];
 	const loop = async () => {
-		const {value: {namespace, key, value}, done} = await iterator.next();
-		/**
-		 * @type {KeyValue}
-		 */
-		const kv = {namespace, key, value: value.toString('utf8')};
+		const {value, done} = await iterator.next();
+		const kv = new KeyValue(value);
 		if (!filter || filter(kv)) {
 			result.push(kv);
 		}
-		if (!done) {
+		if (!done && paginator(kv, result)) {
 			await loop();
 		}
 	};
@@ -27,22 +27,24 @@ const parseStates = async (iterator, filter) => {
 
 /**
  * @param {Iterators.HistoryQueryIterator} iterator
- * @param {function} [filter]
+ * @param {function(KeyModification):boolean} [filter]
+ * @param {function(KeyModification,KeyModification[]):boolean} [paginator]
  * @return {Promise<KeyModification[]>}
  */
-const parseHistory = async (iterator, filter) => {
+const parseHistory = async (iterator, filter, paginator) => {
 	const result = [];
+	if (!paginator) {
+		paginator = _ => true;
+	}
 	const loop = async () => {
-		const {value: {is_delete, value, timestamp, tx_id}, done} = await iterator.next();
-		/**
-		 * @type {KeyModification}
-		 */
-		const km = {is_delete, tx_id, value: value.toString('utf8'), timestamp: getNanos(timestamp)};
+		const {value, done} = await iterator.next();
+
+		const km = new KeyModification(value);
 		if (!filter || filter(km)) {
 			result.push(km);
 		}
 
-		if (!done) {
+		if (!done && paginator(km, result)) {
 			await loop();
 		}
 	};
