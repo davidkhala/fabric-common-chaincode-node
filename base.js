@@ -67,7 +67,7 @@ class CommonChaincode {
 			const result = await this.init(this.stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.logger.error(err);
+			this.logger.error(err.stack);
 			return CommonChaincode.Error(err);
 		}
 	}
@@ -81,7 +81,7 @@ class CommonChaincode {
 			const result = await this.invoke(this.stub);
 			return CommonChaincode.Success(result);
 		} catch (err) {
-			this.logger.error(err);
+			this.logger.error(err.stack);
 			return CommonChaincode.Error(err);
 		}
 	}
