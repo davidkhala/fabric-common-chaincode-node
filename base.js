@@ -16,8 +16,8 @@ class CommonChaincode {
 	}
 
 	static Success(data = '') {
-		if(typeof data ==='object'){
-			data = JSON.stringify(data)
+		if (typeof data === 'object') {
+			data = JSON.stringify(data);
 		}
 		return shim.success(Buffer.from(data));
 	}
