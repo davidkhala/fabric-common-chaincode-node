@@ -15,7 +15,7 @@ home of
         ``` super(`${contractName}`) ```
     - function namespace division: <contract name>:<function name>
     - ledger data is integral for multiple contract  
-- [chaincode][nodejs][contract-api] minimum package.json
+- [contract-api] minimum package.json
     ```json
   {
       "main": "index.js", 
