@@ -1,8 +1,7 @@
 # fabric-common-chaincode-node
+home of `npm fabric-common-chaincode`
 
-home of 
-- `npm fabric-common-chaincode`
-- `npm khala-fabric-contract-api`
+[![NPM](https://nodei.co/npm/fabric-common-chaincode.png)](https://nodei.co/npm/fabric-common-chaincode/)
 
 
 ## Notes

@@ -2,10 +2,7 @@
   "name": "fabric-common-chaincode",
   "version": "2.1.1-alpha",
   "author": "davidliu  <david-khala@hotmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/davidkhala/fabric-common-chaincode-node.git"
-  },
+  "repository": "davidkhala/fabric-common-chaincode-node",
   "license": "Apache-2.0",
   "dependencies": {
     "fabric-shim": "latest"
