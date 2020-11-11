@@ -30,8 +30,17 @@ class CommonChaincode {
 
 	/**
 	 * @param {CommonChaincode} chaincodeInstance
+	 * @param {MockOptions} [mockOptions]
 	 */
-	static Start(chaincodeInstance) {
+	static Start(chaincodeInstance, mockOptions = {}) {
+		const {address, chaincodeIdName} = mockOptions;
+		if (address) {
+			process.argv.push(`--peer.address=${address}:7052`);
+		}
+		if (chaincodeIdName) {
+			process.argv.push(`--chaincodeIdName=${chaincodeIdName}`);
+		}
+
 		shim.start(chaincodeInstance);
 	}
 
