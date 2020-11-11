@@ -6,5 +6,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "fabric-shim": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest-6"
   }
 }
