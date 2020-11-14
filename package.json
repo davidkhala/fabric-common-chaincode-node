@@ -7,6 +7,9 @@
   "dependencies": {
     "fabric-shim": "latest-1.4"
   },
+  "devDependencies": {
+    "mocha": "latest-6"
+  },
   "publishConfig": {
     "tag": "latest-1.4"
   }
