@@ -13,6 +13,10 @@ class CommonChaincode {
 	constructor(name) {
 		this.name = name;
 		this.logger = getLogger(name);
+		/**
+		 * @type {ChaincodeStub}
+		 */
+		this.stub = undefined;
 	}
 
 	static Success(data = '') {

@@ -1,4 +1,4 @@
-const {getNanos} = require('./protobuf.Timestamp');
+const {getNanos, getMillis} = require('./protobuf.Timestamp');
 
 class ChaincodeStub {
 	/**
@@ -8,9 +8,9 @@ class ChaincodeStub {
 		this.stub = stub;
 		this.transient = {};
 		const transient = stub.getTransient();
-		for (const key of Object.keys(transient.map)) {
-			this.transient[key] = transient.get(key).toString('utf8');
-		}
+		transient.forEach((value, key) => {
+			this.transient[key] = value.toString('utf8');
+		});
 	}
 
 	/**
@@ -96,12 +96,12 @@ class ChaincodeStub {
 	}
 
 	/**
-	 *
-	 * @return {Timestamp.Nanosecond}
+	 * @param {boolean} asMilliSecond
+	 * @return {Timestamp.Nanosecond|Timestamp.Millisecond}
 	 */
-	getTxTimestamp() {
+	getTxTimestamp(asMilliSecond) {
 		const s = this.stub.getTxTimestamp();
-		return getNanos(s);
+		return asMilliSecond ? getMillis(s) : getNanos(s);
 	}
 
 	/**

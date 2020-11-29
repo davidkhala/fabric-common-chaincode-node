@@ -11,8 +11,14 @@ const Second = 1000 * Millisecond;
  */
 
 /**
- * Number of nanoseconds since epoch.
+ * The nanoseconds elapsed since unix epoch
  * @typedef Timestamp.Nanosecond
+ * @type {number}
+ */
+
+/**
+ * The milliseconds elapsed since unix epoch.
+ * @typedef Timestamp.Millisecond
  * @type {number}
  */
 
