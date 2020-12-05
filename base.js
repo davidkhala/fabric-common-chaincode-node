@@ -20,9 +20,15 @@ class CommonChaincode {
 	}
 
 	static Success(data = '') {
-		if (typeof data === 'object') {
-			data = JSON.stringify(data);
+		switch (typeof data) {
+			case 'number':
+				data = `${data}`;
+				break;
+			case 'object':
+				data = JSON.stringify(data);
+				break;
 		}
+
 		return shim.success(Buffer.from(data));
 	}
 
