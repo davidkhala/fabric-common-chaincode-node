@@ -41,25 +41,10 @@ class CommonChaincode {
 
 	/**
 	 *
-	 * @param {ChaincodeStub} stub
 	 * @returns {Promise<string|*>}
 	 */
-	async init(stub) {
+	async init() {
 		throw new Error('init() should be implement');
-	}
-
-	/**
-	 *
-	 * @param {ChaincodeStub} stub
-	 * @returns {Promise<string|*>}
-	 */
-	async invoke(stub) {
-		const {fcn, params} = stub.getFunctionAndParameters();
-		if (typeof this[fcn] === 'function' && fcnNameFilter(fcn)) {
-			return await this[fcn](stub, ...params);
-		} else {
-			throw Error('unknownTransaction');
-		}
 	}
 
 	async Init(stub) {
@@ -68,7 +53,7 @@ class CommonChaincode {
 			this.logger.info('Init', fcn);
 			this.logger.debug(fcn, params);
 			this.stub = new ChaincodeStub(stub);
-			const result = await this.init(this.stub);
+			const result = await this.init();
 			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err.stack);
@@ -82,7 +67,12 @@ class CommonChaincode {
 			this.logger.info('Invoke', fcn);
 			this.logger.debug(fcn, params);
 			this.stub = new ChaincodeStub(stub);
-			const result = await this.invoke(this.stub);
+			let result;
+			if (typeof this[fcn] === 'function' && fcnNameFilter(fcn)) {
+				result = await this[fcn](...params);
+			} else {
+				throw Error('unknownTransaction');
+			}
 			return CommonChaincode.Success(result);
 		} catch (err) {
 			this.logger.error(err.stack);

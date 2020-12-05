@@ -1,5 +1,8 @@
 const {getNanos, getMillis} = require('./protobuf.Timestamp');
 
+/**
+ * @class
+ */
 class ChaincodeStub {
 	/**
 	 * @param {shim.ChaincodeStub} stub
@@ -23,10 +26,17 @@ class ChaincodeStub {
 
 	/**
 	 * @param {string} key State variable key to retrieve from the state store
-	 * @returns {Promise<string>} Promise for the current value of the state variable
+	 * @param {string} collection The collection name
+	 * @returns {Promise<string>} current value
 	 */
-	async getState(key) {
-		const state = await this.stub.getState(key);
+	async getState(key, collection) {
+		let state;
+		if (collection) {
+			state = await this.stub.getPrivateData(collection, key);
+		} else {
+			state = await this.stub.getState(key);
+		}
+
 		return state.toString();
 	}
 
@@ -34,11 +44,16 @@ class ChaincodeStub {
 	 * @override
 	 * @param key
 	 * @param value
-	 * @return {Promise<void>}
+	 * @param [collection]
 	 */
-	async putState(key, value) {
-		await this.stub.putState(key, value);
+	async putState(key, value, collection) {
+		if (collection) {
+			await this.stub.putPrivateData(collection, key, value);
+		} else {
+			await this.stub.putState(key, value);
+		}
 	}
+
 
 	/**
 	 * @override
@@ -48,17 +63,6 @@ class ChaincodeStub {
 	getFunctionAndParameters() {
 		return this.stub.getFunctionAndParameters();
 	}
-
-	/**
-	 * @param {string} collection The collection name
-	 * @param {string} key Private data variable key to retrieve from the state store
-	 * @returns {string} value
-	 */
-	async getPrivateData(collection, key) {
-		const raw = await this.stub.getPrivateData(collection, key);
-		return raw.toString();
-	}
-
 
 	/**
 	 * the transient key-value that can be used by the chaincode but not saved in the ledger
@@ -108,10 +112,16 @@ class ChaincodeStub {
 	 *
 	 * @param {string} [startKey]
 	 * @param {string} [endKey]
+	 * @param {string} [collection]
 	 * @return {Promise<Iterators.StateQueryIterator>}
 	 */
-	async getStateByRange(startKey = '', endKey = '') {
-		return await this.stub.getStateByRange(startKey, endKey);
+	async getStateByRange(startKey = '', endKey = '', collection) {
+		if (collection) {
+			return await this.stub.getPrivateDataByRange(collection, startKey, endKey);
+		} else {
+			return await this.stub.getStateByRange(startKey, endKey);
+		}
+
 	}
 
 	/**
@@ -123,7 +133,6 @@ class ChaincodeStub {
 		return await this.stub.getHistoryForKey(key);
 	}
 
-
 	// getStateByRangeWithPagination(startKey: string, endKey: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 	// getStateByPartialCompositeKey(objectType: string, attributes: string[]): Promise<Iterators.StateQueryIterator>;
 	// getStateByPartialCompositeKeyWithPagination(objectType: string, attributes: string[], pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
@@ -131,36 +140,12 @@ class ChaincodeStub {
 	// getQueryResult(query: string): Promise<Iterators.StateQueryIterator>;
 	// getQueryResultWithPagination(query: string, pageSize: number, bookmark?: string): Promise<StateQueryResponse<Iterators.StateQueryIterator>>;
 
-	//
 
 	// setEvent(name: string, payload: Buffer): void;
 	//
 	// createCompositeKey(objectType: string, attributes: string[]): string;
 	// splitCompositeKey(compositeKey: string): SplitCompositekey;
 	//
-
-
-	/**
-	 * @override
-	 * @param collection
-	 * @param key
-	 * @param value
-	 * @return {Promise<void>}
-	 */
-	async putPrivateData(collection, key, value) {
-		await this.stub.putPrivateData(collection, key, value);
-	}
-
-	/**
-	 *
-	 * @param {string} collection
-	 * @param {string} [startKey]
-	 * @param {string} [endKey]
-	 * @return {Promise<Iterators.StateQueryIterator>}
-	 */
-	async getPrivateDataByRange(collection, startKey = '', endKey = '') {
-		return await this.stub.getPrivateDataByRange(collection, startKey, endKey);
-	}
 
 	// deletePrivateData(collection: string, key: string): Promise<void>;
 	// setPrivateDataValidationParameter(collection: string, key: string, ep: Buffer): Promise<void>;
