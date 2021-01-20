@@ -4,6 +4,7 @@
 
 
 ## Notes
+- `/usr/local/src` is the place to hold nodejs chaincode in docker
 - nodejs chaincode do not suffer from >100 iterator size limit   
 - nodejs chaincode take longer time in install chaincode only.
 - [FAB-9287] devDependencies and offline chaincode instantiate is not supported yet
