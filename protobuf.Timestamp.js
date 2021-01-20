@@ -2,7 +2,8 @@ const Nanosecond = 1;
 const Microsecond = 1000 * Nanosecond;
 const Millisecond = 1000 * Microsecond;
 const Second = 1000 * Millisecond;
-
+const Minute = 60 * Second;
+const Hour = 60 * Minute;
 /**
  * google.protobuf.Timestamp
  * @typedef Timestamp.AsObject
@@ -33,7 +34,7 @@ const Second = 1000 * Millisecond;
  * @param {Timestamp.AsObject} timestamp
  * @return {Timestamp.Nanosecond}
  */
-exports.getNanos = (timestamp) => {
+const getNanos = (timestamp) => {
 	return timestamp.seconds * Second + timestamp.nanos;
 };
 /**
@@ -41,13 +42,24 @@ exports.getNanos = (timestamp) => {
  * @param {Timestamp.AsObject} timestamp
  * @return {Timestamp.Microsecond}
  */
-exports.getMicros = (timestamp) => {
+const getMicros = (timestamp) => {
 	return timestamp.seconds * 1000000 + (timestamp.nanos / Microsecond);
 };
 /**
  * @param {Timestamp.AsObject} timestamp
  * @return {Timestamp}
  */
-exports.getMillis = (timestamp) => {
+const getMillis = (timestamp) => {
 	return timestamp.seconds * 1000 + (timestamp.nanos / Millisecond);
+};
+module.exports = {
+	getNanos,
+	getMicros,
+	getMillis,
+	Nanosecond,
+	Microsecond,
+	Millisecond,
+	Second,
+	Minute,
+	Hour,
 };
