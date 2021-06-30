@@ -1,5 +1,6 @@
 const {getNanos} = require('./protobuf.Timestamp');
-
+const MIN_UNICODE_RUNE_VALUE = '\u0000';
+const COMPOSITEKEY_NS = '\x00';
 /**
  * @param {Iterators.StateQueryIterator} iterator
  * @param {function} [filter]
@@ -103,8 +104,8 @@ const splitCompositeKey = (compositeKey) => {
 	return result;
 };
 module.exports = {
-	ParseStates,
-	ParseHistory,
+	parseStates,
+	parseHistory,
 	createCompositeKey,
 	splitCompositeKey,
 };

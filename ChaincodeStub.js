@@ -1,6 +1,5 @@
 const {getNanos, getMillis} = require('./protobuf.Timestamp');
-const MIN_UNICODE_RUNE_VALUE = '\u0000';
-const COMPOSITEKEY_NS = '\x00';
+
 /**
  *
  * @param {StateQueryResponse<Iterators.StateQueryIterator>} stateQueryResponse
