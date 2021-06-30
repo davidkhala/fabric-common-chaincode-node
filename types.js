@@ -31,3 +31,10 @@
  * @property {Map<string,string>} attrs
  */
 
+/**
+ * @typedef {Object} KeyParam
+ * @property {string} [objectType]
+ * @property {string[]} [attributes]
+ * @property {string} [startKey]
+ * @property {string} [endKey]
+ */
