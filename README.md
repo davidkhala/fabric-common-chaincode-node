@@ -4,8 +4,6 @@ home of `npm fabric-common-chaincode`
 [![NPM](https://nodei.co/npm/fabric-common-chaincode.png)](https://nodei.co/npm/fabric-common-chaincode/)
 
 
-## Notes
-
 ## TODO
 - mock support to real peer
 
