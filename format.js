@@ -10,7 +10,11 @@ const parseStates = async (iterator, filter) => {
 
 	const result = [];
 	const loop = async () => {
-		const {value: {namespace, key, value}, done} = await iterator.next();
+		const {value: valueObject, done} = await iterator.next();
+		if (done) {
+			return;
+		}
+		const {namespace, key, value} = valueObject;
 		/**
 		 * @type {KeyValue}
 		 */
@@ -18,9 +22,8 @@ const parseStates = async (iterator, filter) => {
 		if (!filter || filter(kv)) {
 			result.push(kv);
 		}
-		if (!done) {
-			await loop();
-		}
+		await loop();
+
 	};
 	await loop();
 	return result;
@@ -34,7 +37,11 @@ const parseStates = async (iterator, filter) => {
 const parseHistory = async (iterator, filter) => {
 	const result = [];
 	const loop = async () => {
-		const {value: {is_delete, value, timestamp, tx_id}, done} = await iterator.next();
+		const {value: valueObject, done} = await iterator.next();
+		if (done) {
+			return;
+		}
+		const {is_delete, value, timestamp, tx_id} = valueObject;
 		/**
 		 * @type {KeyModification}
 		 */
@@ -43,9 +50,7 @@ const parseHistory = async (iterator, filter) => {
 			result.push(km);
 		}
 
-		if (!done) {
-			await loop();
-		}
+		await loop();
 	};
 	await loop();
 
