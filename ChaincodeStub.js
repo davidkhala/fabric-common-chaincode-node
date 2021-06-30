@@ -246,6 +246,20 @@ class ChaincodeStub {
 		return result;
 	}
 
+
+	/**
+	 * return empty for if no record.
+	 * @return {Promise<string>}
+	 */
+	async getChaincodeID() {
+		const iterator = await this.getStateByRange(undefined, undefined, 1);
+		const {value} = await iterator.next();
+		if (!value) {
+			return '';
+		}
+		return value.namespace;
+	}
+
 	// setPrivateDataValidationParameter(collection: string, key: string, ep: Buffer): Promise<void>;
 	// getPrivateDataValidationParameter(collection: string, key: string): Promise<Buffer>;
 

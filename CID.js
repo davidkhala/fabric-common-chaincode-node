@@ -9,7 +9,7 @@ class CID extends shim.ClientIdentity {
 	}
 
 	getCertPem() {
-		return this.stub.getCreator().id_bytes.toString('utf8');
+		return this.stub.getCreator().idBytes.toString('utf8');
 	}
 
 	toString() {
