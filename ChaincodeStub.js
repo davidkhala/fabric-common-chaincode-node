@@ -1,8 +1,5 @@
 const {getNanos, getMillis} = require('./protobuf.Timestamp');
 
-/**
- * @class
- */
 class ChaincodeStub {
 	/**
 	 * @param {shim.ChaincodeStub} stub
@@ -26,7 +23,8 @@ class ChaincodeStub {
 
 	/**
 	 * @param {string} key State variable key to retrieve from the state store
-	 * @param {string} collection The collection name
+	 * @param {string} [collection] The collection name for Private Data Collection.
+	 * 		if unset, get state from public ledger
 	 * @returns {Promise<string>} current value
 	 */
 	async getState(key, collection) {
@@ -41,10 +39,9 @@ class ChaincodeStub {
 	}
 
 	/**
-	 * @override
-	 * @param key
-	 * @param value
-	 * @param [collection]
+	 * @param {string} key
+	 * @param {string} value
+	 * @param {string} [collection] The collection name for Private Data Collection
 	 */
 	async putState(key, value, collection) {
 		if (collection) {
@@ -83,7 +80,7 @@ class ChaincodeStub {
 	}
 
 	/**
-	 * @async
+	 * @override
 	 * @param {string} chaincodeName
 	 * @param {string[]} args
 	 * @param {string} [channel] If `channel` is falsy, the caller's channel is assumed.
@@ -125,7 +122,7 @@ class ChaincodeStub {
 	}
 
 	/**
-	 *
+	 * @override
 	 * @param {string} key
 	 * @return {Promise<Iterators.HistoryQueryIterator>}
 	 */
